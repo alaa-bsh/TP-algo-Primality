@@ -6,8 +6,30 @@
 #define n 1000
 long long data[n];
 int result;
-char result_str[10];
+char result_str[20];
 int taille = 0;
+double temps_algo[4][n];
+int res_algo[4][n];
+FILE *sortie = NULL;
+
+void stocker_resultat(int algo, int j, int est_premier, double temps)
+{
+    res_algo[algo - 1][j] = est_premier;
+    temps_algo[algo - 1][j] = temps;
+}
+
+void ecrire_tout()
+{
+    fprintf(sortie, "index,valeur,resultat,A1_ms,A2_ms,A3_ms,A4_ms\n");
+    for (int j = 0; j < taille; j++)
+    {
+        fprintf(sortie, "%d,%lld,%s,%.6f,%.6f,%.6f,%.6f\n",
+                j, data[j],
+                res_algo[3][j] ? "premier" : "pas premier",
+                temps_algo[0][j], temps_algo[1][j],
+                temps_algo[2][j], temps_algo[3][j]);
+    }
+}
 
 void lire_fichier(const char *nom_fichier)
 {
@@ -53,6 +75,7 @@ int A1()
 
         fin = clock();
         temps = calcule_temps(debut, fin);
+        stocker_resultat(1, j, result, temps);
         if (result == 1)
         {
             strcpy(result_str, "premier");
@@ -62,7 +85,7 @@ int A1()
             strcpy(result_str, "pas premier");
         }
 
-        printf("%d/%lld : %s | Temps : %.3f ms\n",
+        printf("%d/%lld : %s | Temps : %.6f ms\n",
                j, data[j], result_str, temps);
     }
 
@@ -86,6 +109,7 @@ int A2()
 
         clock_t fin = clock();
         double temps = calcule_temps(debut, fin);
+        stocker_resultat(2, j, result, temps);
         if (result == 1)
         {
             strcpy(result_str, "premier");
@@ -94,7 +118,7 @@ int A2()
         {
             strcpy(result_str, "pas premier");
         }
-        printf("%d/%lld : %s | Temps : %.3f ms\n", j, data[j], result_str, temps);
+        printf("%d/%lld : %s | Temps : %.6f ms\n", j, data[j], result_str, temps);
     }
 
     return 0;
@@ -117,6 +141,7 @@ int A3()
 
         clock_t fin = clock();
         double temps = calcule_temps(debut, fin);
+        stocker_resultat(3, j, result, temps);
         if (result == 1)
         {
             strcpy(result_str, "premier");
@@ -125,7 +150,7 @@ int A3()
         {
             strcpy(result_str, "pas premier");
         }
-        printf("%d/%lld : %s | Temps : %.3f ms\n", j, data[j], result_str, temps);
+        printf("%d/%lld : %s | Temps : %.6f ms\n", j, data[j], result_str, temps);
     }
 
     return 0;
@@ -159,6 +184,7 @@ int A4()
         }
         clock_t fin = clock();
         double temps = calcule_temps(debut, fin);
+        stocker_resultat(4, j, result, temps);
         if (result == 1)
         {
             strcpy(result_str, "premier");
@@ -167,7 +193,7 @@ int A4()
         {
             strcpy(result_str, "pas premier");
         }
-        printf("%d/%lld : %s | Temps : %.3f ms\n", j, data[j], result_str, temps);
+        printf("%d/%lld : %s | Temps : %.6f ms\n", j, data[j], result_str, temps);
     }
 
     return 0;
@@ -203,26 +229,19 @@ int main()
         return 1;
     }
     lire_fichier(chemain);
-    printf("choisir un algorithme\n");
-    scanf("%d", &c);
-    switch (c)
+    char nom_sortie[64];
+    sprintf(nom_sortie, "../results/resultat_fichier%d.csv", c);
+    sortie = fopen(nom_sortie, "w");
+    if (sortie == NULL)
     {
-    case 1:
-        A1();
-        break;
-    case 2:
-        A2();
-        break;
-    case 3:
-        A3();
-        break;
-    case 4:
-        A4();
-        break;
-    default:
-        printf("choix invalide\n");
+        perror("Impossible de creer le fichier de sortie");
         return 1;
     }
-
+    A1();
+    A2();
+    A3();
+    A4();
+    ecrire_tout();
+    fclose(sortie);
     return 0;
 }
