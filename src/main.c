@@ -64,7 +64,7 @@ int A1()
 
         debut = clock();
 
-        for (int i = 2; i < data[j]; i++)
+        for (long long i = 2; i < data[j]; i++)
         {
             if (data[j] % i == 0)
             {
@@ -98,7 +98,7 @@ int A2()
     {
         result = 1;
         clock_t debut = clock();
-        for (int i = 2; i <= data[j] / 2; i++)
+        for (long long i = 2; i <= data[j] / 2; i++)
         {
             if (data[j] % i == 0)
             {
@@ -130,7 +130,7 @@ int A3()
     {
         result = 1;
         clock_t debut = clock();
-        for (int i = 2; i * i <= data[j]; i++)
+        for (long long i = 2; i * i <= data[j]; i++)
         {
             if (data[j] % i == 0)
             {
@@ -173,7 +173,7 @@ int A4()
         }
         else
         {
-            for (int i = 3; i * i <= data[j]; i += 2)
+            for (long long i = 3; i * i <= data[j]; i += 2)
             {
                 if (data[j] % i == 0)
                 {
