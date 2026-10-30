@@ -224,6 +224,9 @@ int main()
     case 5:
         strcpy(chemain, "../data/test-3.csv");
         break;
+        case 6:
+        strcpy(chemain, "../data/TableTP1.csv");
+        break;
     default:
         printf("choix invalide\n");
         return 1;
